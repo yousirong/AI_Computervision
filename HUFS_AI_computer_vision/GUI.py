@@ -127,14 +127,21 @@ class MyTkinter():
         self.ip = ip.ImageProcessing(np.array(self.img_source))
 
     def thresholding(self):
-        self.ip.toGrayScale()
-        self.ip.thresholding()
+        img = self.ip.sourceImg
+        gray_img = self.ip.toGrayScale(img)
+        thresholded = self.ip.thresholding(gray_img)
+        self.ip.targetImg = thresholded
         self.img_target = self.ip.targetImg #self.ip.cvtTarget2PIL()
         
         messagebox.showinfo("Info", "processing done")
         
     def circleDetection(self):
+        img = self.ip.sourceImg
+        gray_img = self.ip.toGrayScale(img)
+        self.ip.circleDetection(gray_img)
+        self.img_target = self.ip.targetImg
         messagebox.showinfo("Info", "Circle Detection is done")
+
 
     def apply(self):
         self.img_target = Image.fromarray(self.img_target)
