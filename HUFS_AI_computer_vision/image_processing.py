@@ -24,14 +24,36 @@ class ImageProcessing():
 
     def circleDetection(self, img):
         edgeMap = self.edgeDetection(img)
-        edge = (edgeMap>150)*255 #thresholding   #self.thresholding(edgeMap)
+        edge = (edgeMap > 150) * 255  # thresholding
 
+        # Detect circles using Hough Circle Transform
         centers, accumulator = self.houghCircleTransform(edge, 20, 23)
-        print(np.min(accumulator[:,:,0]), np.max(accumulator[:,:,0]))
-        self.targetImg = self.clipping(accumulator[:,:,0])
-        #self.targetImg = accumulator[:,:,0]#edge
+        print(np.min(accumulator[:, :, 0]), np.max(accumulator[:, :, 0]))
+
+        # Draw detected circles on the source image
+        for center in centers:
+            y, x, r = center
+            # Draw the circle and its center
+            cv.circle(self.sourceImg, (x, y), r + 20, (255, 0, 0), 2)  # Circle
+            cv.circle(self.sourceImg, (x, y), 2, (0, 255, 0), 3)        # Center point
+
+        # Update the target image to be the source image with drawn circles
+        self.targetImg = self.sourceImg
 
     def houghCircleTransform(self, edgeMap, min_rad, max_rad):
+        """
+        주어진 에지 맵을 기반으로 여러 반지름을 고려해 누적 배열(accumulator)을 채우고,
+        누적 배열의 특정 기준을 초과하는 위치를 중심으로 원을 검출
+        Args:
+            edgeMap (_type_): edgeDetection을 사용해 이미지의 에지를 추출한 맵
+            min_rad (_type_): 검출할 원의 최소 반지름
+            max_rad (_type_): 검출할 원의 최대 반지름
+
+        Returns:
+            centers: 원의 중심과 반지름 정보가 포함된 좌표 배열
+            accumulator: 누적 배열로, 각 좌표와 반지름에 대한 투표 결과가 포함
+        """
+        
         # edgeMap의 높이와 너비를 구함
         nY, nX = edgeMap.shape
         # 누적 배열 초기화: 높이, 너비, 반지름의 범위에 대한 3차원 배열 생성
@@ -72,7 +94,8 @@ class ImageProcessing():
             circles.append((x, y, r + min_rad))
             cnt += 1
 
-        # 검출된 원의 중심과 반지름 정보, 그리고 누적 배열 반환
+        # 검출된 원의 중심과 반지름 정보, 그리고 누적 배열 반환(원의 중심이 될 가능성이 높은 좌표에
+        # 대한 결과가 포함된 3차원 배열)
         return centers, accumulator
 
     def edgeDetection(self, img):

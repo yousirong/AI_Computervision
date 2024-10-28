@@ -138,10 +138,10 @@ class MyTkinter():
     def circleDetection(self):
         img = self.ip.sourceImg
         gray_img = self.ip.toGrayScale(img)
-        self.ip.circleDetection(gray_img)
-        self.img_target = self.ip.targetImg
+        self.ip.circleDetection(gray_img)  # Process and draw circles
+        self.img_target = self.ip.sourceImg  # Update target image to display circles
+        self.apply()  # Display the result
         messagebox.showinfo("Info", "Circle Detection is done")
-
 
     def apply(self):
         self.img_target = Image.fromarray(self.img_target)
