@@ -24,21 +24,22 @@ class ImageProcessing():
 
     def circleDetection(self, img):
         edgeMap = self.edgeDetection(img)
-        edge = (edgeMap > 150) * 255  # thresholding
+        edge = (edgeMap > 150) * 255  # 임계값 적용
 
-        # Detect circles using Hough Circle Transform
+        # Hough Circle Transform을 이용해 원 검출
         centers, accumulator = self.houghCircleTransform(edge, 20, 23)
         print(np.min(accumulator[:, :, 0]), np.max(accumulator[:, :, 0]))
 
-        # Draw detected circles on the source image
+        # 검출된 원을 원본 이미지에 그리기
         for center in centers:
             y, x, r = center
-            # Draw the circle and its center
-            cv.circle(self.sourceImg, (x, y), r + 20, (255, 0, 0), 2)  # Circle
-            cv.circle(self.sourceImg, (x, y), 2, (0, 255, 0), 3)        # Center point
+            # 원과 중심을 그림
+            cv.circle(self.sourceImg, (x, y), r + 20, (255, 0, 0), 2)  # 원 그리기
+            cv.circle(self.sourceImg, (x, y), 2, (0, 255, 0), 3)       # 중심점 그리기
 
-        # Update the target image to be the source image with drawn circles
+        # 원이 그려진 이미지를 대상 이미지로 업데이트
         self.targetImg = self.sourceImg
+
 
     def houghCircleTransform(self, edgeMap, min_rad, max_rad):
         """

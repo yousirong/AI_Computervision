@@ -137,11 +137,11 @@ class MyTkinter():
         
     def circleDetection(self):
         img = self.ip.sourceImg
-        gray_img = self.ip.toGrayScale(img)
-        self.ip.circleDetection(gray_img)  # Process and draw circles
-        self.img_target = self.ip.sourceImg  # Update target image to display circles
-        self.apply()  # Display the result
-        messagebox.showinfo("Info", "Circle Detection is done")
+        gray_img = self.ip.toGrayScale(img)  # 그레이스케일로 변환
+        self.ip.circleDetection(gray_img)    # 원 검출 및 그리기 수행
+        self.img_target = self.ip.sourceImg  # 원이 표시된 이미지를 대상 이미지로 업데이트
+        self.apply()                         # 결과를 GUI에 표시
+        messagebox.showinfo("Info", "원 검출이 완료되었습니다")
 
     def apply(self):
         self.img_target = Image.fromarray(self.img_target)
